@@ -15,26 +15,48 @@ def safe_float(val, default=0.0):
 
 def categorizar_nome(nome):
     nome_lower = nome.lower()
-    if any(w in nome_lower for w in ["fone", "bluetooth", "smartwatch", "relogio", "celular", "gamer", "pc", "led", "cabo", "carregador", "parafusadeira", "furadeira", "suporte"]):
-        return "Eletrônicos"
-    elif any(w in nome_lower for w in ["panela", "jogo", "copo", "cozinha", "casa", "cortador", "jarra", "pote", "mesa", "organizador", "vidro"]):
-        return "Casa & Utilidades"
-    elif any(w in nome_lower for w in ["vestido", "moletom", "tenis", "shoes", "camisa", "camiseta", "roupa", "bolsa", "oculos", "cristao"]):
-        return "Moda"
-    elif any(w in nome_lower for w in ["siage", "eudora", "batom", "maquiagem", "creme", "perfume", "skincare", "cabelo"]):
-        return "Beleza"
+    
+    # Eletrônicos & Tech
+    if any(w in nome_lower for w in ["fone", "bluetooth", "smartwatch", "relogio", "celular", "gamer", "pc", "led", "cabo", "carregador", "suporte", "camera", "som", "caixa de som", "drone", "tablet", "teclado", "mouse", "usb"]):
+        return "Eletrônicos & Tech"
+    
+    # Casa & Cozinha
+    elif any(w in nome_lower for w in ["panela", "jogo", "copo", "cozinha", "casa", "cortador", "jarra", "pote", "mesa", "organizador", "vidro", "toalha", "lixeira", "prato", "talher", "air fryer", "lampada", "tapete", "travesseiro", "lençol"]):
+        return "Casa & Cozinha"
+    
+    # Moda & Calçados
+    elif any(w in nome_lower for w in ["vestido", "moletom", "tenis", "shoes", "camisa", "camiseta", "roupa", "bolsa", "oculos", "cristao", "calca", "bermuda", "shorts", "saia", "meia", "chinelo", "sapatilha", "jaqueta", "casaco"]):
+        return "Moda & Calçados"
+    
+    # Beleza & Saúde
+    elif any(w in nome_lower for w in ["siage", "eudora", "batom", "maquiagem", "creme", "perfume", "skincare", "cabelo", "shampoo", "condicionador", "esmalte", "pincel", "protetor", "sabonete", "serum"]):
+        return "Beleza & Saúde"
+    
+    # Ferramentas & Auto
+    elif any(w in nome_lower for w in ["parafusadeira", "furadeira", "chave", "maleta", "automotivo", "lavadora", "som automotivo", "capacete", "luva", "pneu", "bico", "bomba", "martelo", "alicate"]):
+        return "Ferramentas & Auto"
+    
+    # Esporte & Lazer
+    elif any(w in nome_lower for w in ["bicicleta", "scooter", "bola", "academia", "elastico", "garrafa", "squeeze", "camping", "pesca", "mochila", "patins", "kimono"]):
+        return "Esporte & Lazer"
+    
+    # Infantil & Brinquedos
+    elif any(w in nome_lower for w in ["brinquedo", "boneca", "carrinho", "infantil", "bebe", "fralda", "mordedor", "jogos", "quebra-cabeca"]):
+        return "Infantil & Brinquedos"
+    
     else:
         return "Outros"
 
 def get_shopee_products():
     if not APP_ID or not APP_SECRET:
-        print("Aviso: Chaves não encontradas. Usando produtos de teste.")
+        print("Aviso: Chaves não encontradas. Usando catálogo expandido de teste.")
         return get_mock_products()
 
     timestamp = int(time.time())
+    # Limite expandido para 100 produtos
     query = """
     query {
-      productOfferV2(page: 1, limit: 20) {
+      productOfferV2(page: 1, limit: 100) {
         nodes {
           productName
           price
@@ -57,12 +79,12 @@ def get_shopee_products():
     url = "https://open-api.affiliate.shopee.com.br/graphql"
     
     try:
-        response = requests.post(url, headers=headers, data=payload, timeout=15)
+        response = requests.post(url, headers=headers, data=payload, timeout=20)
         res_data = response.json()
         nodes = res_data.get("data", {}).get("productOfferV2", {}).get("nodes", [])
         
         if not nodes:
-            print("Nenhum produto retornado. Usando dados de teste.")
+            print("Nenhum produto retornado da API. Usando catálogo de teste.")
             return get_mock_products()
 
         produtos = []
@@ -83,30 +105,33 @@ def get_shopee_products():
         return produtos
 
     except Exception as e:
-        print(f"Erro na conexão com a API: {e}")
+        print(f"Erro ao conectar com a Shopee: {e}")
         return get_mock_products()
 
 def get_mock_products():
     return [
-        {"title": "Fone de Ouvido Bluetooth TWS", "price": "R$ 39,90", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Eletrônicos"},
-        {"title": "Smartwatch Relógio Esportivo", "price": "R$ 89,90", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Eletrônicos"},
-        {"title": "Jogo de Panelas 5 Peças", "price": "R$ 142,90", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Casa & Utilidades"},
-        {"title": "Cortador de Legumes Multifuncional", "price": "R$ 38,50", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Casa & Utilidades"},
-        {"title": "Moletom Canguru Cristão", "price": "R$ 59,90", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Moda"},
-        {"title": "Kit Eudora Siàge Pro Cronology", "price": "R$ 69,99", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Beleza"}
+        {"title": "Fone de Ouvido Bluetooth TWS Sem Fio", "price": "R$ 39,90", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Eletrônicos & Tech"},
+        {"title": "Smartwatch Relógio Esportivo HD", "price": "R$ 89,90", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Eletrônicos & Tech"},
+        {"title": "Jogo de Panelas Antiaderente 5 Peças", "price": "R$ 142,90", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Casa & Cozinha"},
+        {"title": "Cortador de Legumes Multifuncional 16 em 1", "price": "R$ 38,50", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Casa & Cozinha"},
+        {"title": "Moletom Canguru Cristão Algodão", "price": "R$ 59,90", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Moda & Calçados"},
+        {"title": "Tênis Running Masculino Respirável", "price": "R$ 79,90", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Moda & Calçados"},
+        {"title": "Kit Eudora Siàge Pro Cronology Tratamento", "price": "R$ 69,99", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Beleza & Saúde"},
+        {"title": "Parafusadeira e Furadeira 26V com Maleta", "price": "R$ 119,90", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Ferramentas & Auto"},
+        {"title": "Garrafa Térmica Inox de Água 1 Litro", "price": "R$ 34,90", "image": "https://via.placeholder.com/250", "link": "https://shopee.com.br", "categoria": "Esporte & Lazer"}
     ]
 
 def generate_html(produtos):
     categorias_presentes = list(dict.fromkeys([p["categoria"] for p in produtos]))
     
-    tabs_html = '<button class="tab-btn active" onclick="filterCategory(\'all\', this)">Todos</button>'
+    tabs_html = '<button class="tab-btn active" onclick="setCategory(\'all\', this)">🔥 Todos</button>'
     for cat in categorias_presentes:
-        tabs_html += f'<button class="tab-btn" onclick="filterCategory(\'{cat}\', this)">{cat}</button>'
+        tabs_html += f'<button class="tab-btn" onclick="setCategory(\'{cat}\', this)">{cat}</button>'
 
     cards_html = ""
     for p in produtos:
         cards_html += f"""
-        <div class="card" data-category="{p['categoria']}">
+        <div class="card" data-category="{p['categoria']}" data-title="{p['title'].replace('"', '&quot;')}">
             <div class="img-container">
                 <img src="{p['image']}" alt="{p['title']}" loading="lazy">
             </div>
@@ -127,14 +152,30 @@ def generate_html(produtos):
     <title>Vitrine Shopee</title>
     <style>
         * {{ box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }}
-        body {{ background-color: #f4f4f6; padding: 12px; }}
+        body {{ background-color: #f4f4f6; padding: 12px; max-width: 1200px; margin: 0 auto; }}
         
+        /* Cabeçalho e Busca */
+        .search-box {{ margin-bottom: 12px; position: relative; }}
+        .search-input {{
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 0.95rem;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: border-color 0.2s;
+        }}
+        .search-input:focus {{ border-color: #ee4d2d; }}
+        
+        /* Abas de Categorias */
         .tabs {{ display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 12px; scrollbar-width: none; }}
         .tabs::-webkit-scrollbar {{ display: none; }}
         .tab-btn {{ background: #fff; border: 1px solid #ddd; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: #555; white-space: nowrap; cursor: pointer; transition: all 0.2s; }}
         .tab-btn.active {{ background: #ee4d2d; color: #fff; border-color: #ee4d2d; }}
         
-        .grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; max-width: 1200px; margin: 0 auto; }}
+        /* Grid de Produtos */
+        .grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }}
         .card {{ background: #ffffff; border-radius: 8px; border: 1px solid #e5e5e5; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }}
         .img-container {{ width: 100%; height: 150px; background-color: #fafafa; }}
         .card img {{ width: 100%; height: 100%; object-fit: cover; }}
@@ -143,30 +184,65 @@ def generate_html(produtos):
         .title {{ font-size: 0.8rem; color: #222; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.4em; line-height: 1.2; }}
         .price {{ font-size: 1rem; font-weight: 700; color: #ee4d2d; margin-bottom: 8px; }}
         .btn {{ text-align: center; background: #ee4d2d; color: #ffffff; text-decoration: none; padding: 6px 0; border-radius: 4px; font-weight: 600; font-size: 0.8rem; display: block; }}
+        
+        /* Estado Vazio */
+        .no-results {{ display: none; text-align: center; padding: 30px 10px; color: #777; font-size: 0.9rem; grid-column: 1 / -1; }}
     </style>
 </head>
 <body>
+
+    <!-- Campo de Busca -->
+    <div class="search-box">
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Pesquisar produtos na vitrine..." oninput="filterProducts()">
+    </div>
+
+    <!-- Filtro por Categorias -->
     <div class="tabs">
         {tabs_html}
     </div>
 
-    <div class="grid">
+    <!-- Lista de Produtos -->
+    <div class="grid" id="productGrid">
         {cards_html}
+        <div class="no-results" id="noResults">
+            Nenhum produto encontrado para sua busca. 🙁
+        </div>
     </div>
 
     <script>
-        function filterCategory(category, element) {{
+        let currentCategory = 'all';
+
+        function setCategory(category, element) {{
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
+            currentCategory = category;
+            filterProducts();
+        }}
 
+        function filterProducts() {{
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
             const cards = document.querySelectorAll('.card');
+            let visibleCount = 0;
+
             cards.forEach(card => {{
-                if (category === 'all' || card.getAttribute('data-category') === category) {{
+                const cat = card.getAttribute('data-category');
+                const title = card.getAttribute('data-title').toLowerCase();
+
+                const matchesCategory = (currentCategory === 'all' || cat === currentCategory);
+                const matchesSearch = query === '' || title.includes(query) || cat.toLowerCase().includes(query);
+
+                if (matchesCategory && matchesSearch) {{
                     card.style.display = 'flex';
+                    visibleCount++;
                 }} else {{
                     card.style.display = 'none';
                 }}
             }});
+
+            const noResults = document.getElementById('noResults');
+            if (noResults) {{
+                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+            }}
         }}
     </script>
 </body>
@@ -175,12 +251,12 @@ def generate_html(produtos):
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html_content)
-    print("Sucesso: index.html gerado!")
+    print("Sucesso: index.html gerado com busca e mais categorias!")
 
 if __name__ == "__main__":
     try:
         prods = get_shopee_products()
         generate_html(prods)
     except Exception as e:
-        print(f"Erro inesperado: {e}")
+        print(f"Erro durante execução: {e}")
         generate_html(get_mock_products())
