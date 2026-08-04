@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vitrine por Categorias</title>
+    <title>Vitrine Shopee</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: #f4f4f6; padding: 12px; }
         
-        /* Abas de Categorias */
         .tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 12px; scrollbar-width: none; }
         .tabs::-webkit-scrollbar { display: none; }
         .tab-btn { background: #fff; border: 1px solid #ddd; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: #555; white-space: nowrap; cursor: pointer; transition: all 0.2s; }
         .tab-btn.active { background: #ee4d2d; color: #fff; border-color: #ee4d2d; }
         
-        /* Grid e Cards */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; max-width: 1200px; margin: 0 auto; }
         .card { background: #ffffff; border-radius: 8px; border: 1px solid #e5e5e5; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
         .img-container { width: 100%; height: 150px; background-color: #fafafa; }
@@ -28,296 +26,248 @@
 </head>
 <body>
     <div class="tabs">
-        <button class="tab-btn active" onclick="filterCategory('all', this)">Todos</button><button class="tab-btn" onclick="filterCategory('Eletrônicos', this)">Eletrônicos</button><button class="tab-btn" onclick="filterCategory('Casa', this)">Casa</button><button class="tab-btn" onclick="filterCategory('Moda', this)">Moda</button><button class="tab-btn" onclick="filterCategory('Beleza', this)">Beleza</button>
+        <button class="tab-btn active" onclick="filterCategory('all', this)">Todos</button><button class="tab-btn" onclick="filterCategory('Moda', this)">Moda</button><button class="tab-btn" onclick="filterCategory('Casa & Utilidades', this)">Casa & Utilidades</button><button class="tab-btn" onclick="filterCategory('Eletrônicos', this)">Eletrônicos</button><button class="tab-btn" onclick="filterCategory('Outros', this)">Outros</button><button class="tab-btn" onclick="filterCategory('Beleza', this)">Beleza</button>
     </div>
 
-    <div class="grid" id="productGrid">
-        
-        <div class="card" data-category="Eletrônicos">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-8261t-mmhukmcj7091aa" alt="Pedal Acelerador Eletronico Fluence 2011 a 2014 2.0 " loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Eletrônicos</span>
-                <h3 class="title">Pedal Acelerador Eletronico Fluence 2011 a 2014 2.0 </h3>
-                <div class="price">R$ 149,60</div>
-                <a href="https://s.shopee.com.br/50Y0Hot7fu" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Eletrônicos">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-822x7-mi36nqlcncp46d" alt="Pedal do Acelerador Eletronico Cruze Ltz 2019 20 13466235" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Eletrônicos</span>
-                <h3 class="title">Pedal do Acelerador Eletronico Cruze Ltz 2019 20 13466235</h3>
-                <div class="price">R$ 149,60</div>
-                <a href="https://s.shopee.com.br/5ArQU7sUKx" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Eletrônicos">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-7rat6-mamv22v9mag296" alt="Pedal Eletronico Acelerador Strada Endurance 2020 2021" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Eletrônicos</span>
-                <h3 class="title">Pedal Eletronico Acelerador Strada Endurance 2020 2021</h3>
-                <div class="price">R$ 200,64</div>
-                <a href="https://s.shopee.com.br/40fT5ywvhk" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Eletrônicos">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-823ri-mpcmcfd24xe5aa" alt="Pedal do Acelerador Eletronico Uno Vivace 2013 14 2015" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Eletrônicos</span>
-                <h3 class="title">Pedal do Acelerador Eletronico Uno Vivace 2013 14 2015</h3>
-                <div class="price">R$ 113,99</div>
-                <a href="https://s.shopee.com.br/4AytIHwIMn" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Eletrônicos">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-7rav7-mamtot9f019y97" alt="Pedal Eletronico Do Acelerador Prisma 2015" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Eletrônicos</span>
-                <h3 class="title">Pedal Eletronico Do Acelerador Prisma 2015</h3>
-                <div class="price">R$ 80,08</div>
-                <a href="https://s.shopee.com.br/4LIJUavf1q" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Eletrônicos">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-7ras9-man2hkbi08lsd5" alt="Pedal Eletrônico Acelerador Renault Fluence" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Eletrônicos</span>
-                <h3 class="title">Pedal Eletrônico Acelerador Renault Fluence</h3>
-                <div class="price">R$ 150,48</div>
-                <a href="https://s.shopee.com.br/4Vbjgtv1gt" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Casa">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-7rffo-m40nqc26qblt26" alt="quadro decorativo infantil safari personalizado bichinhos 3 peças, safari, leão, leaozinho, lilás" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Casa</span>
-                <h3 class="title">quadro decorativo infantil safari personalizado bichinhos 3 peças, safari, leão, leaozinho, lilás</h3>
-                <div class="price">R$ 11,34</div>
-                <a href="https://s.shopee.com.br/4AytII0twL" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Casa">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-8260z-mk1b7wnbx6v554" alt="Kit Sinalização De Balcão: Placa Pix Qr Code + Placa Campainha Acrílico Espelhado" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Casa</span>
-                <h3 class="title">Kit Sinalização De Balcão: Placa Pix Qr Code + Placa Campainha Acrílico Espelhado</h3>
-                <div class="price">R$ 29,90</div>
-                <a href="https://s.shopee.com.br/4LIJUb0GbO" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Casa">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-8261x-mk1b7gxmy51g5c" alt="Kit Placa Pix Personalizada Qr Code + Placa Campainha Identificação Balcão Acrílico Espelhado" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Casa</span>
-                <h3 class="title">Kit Placa Pix Personalizada Qr Code + Placa Campainha Identificação Balcão Acrílico Espelhado</h3>
-                <div class="price">R$ 29,90</div>
-                <a href="https://s.shopee.com.br/4VbjgtzdGR" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Casa">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-825zo-mk1b7orq2zurda" alt="Display Pix Pagamento + Placa Campainha Acrílico Espelhado Balcão Caixa" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Casa</span>
-                <h3 class="title">Display Pix Pagamento + Placa Campainha Acrílico Espelhado Balcão Caixa</h3>
-                <div class="price">R$ 29,90</div>
-                <a href="https://s.shopee.com.br/60QXTetvDk" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Casa">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-824j4-mflko62zpr0r57" alt="Pano Bate Mão em Formato de Pirulito com Alça e Alta Absorção" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Casa</span>
-                <h3 class="title">Pano Bate Mão em Formato de Pirulito com Alça e Alta Absorção</h3>
-                <div class="price">R$ 19,01</div>
-                <a href="https://s.shopee.com.br/6AjxfxtHsn" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Casa">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/br-11134207-81z1k-mhj6j5dcnzlvcd" alt="Carrinho Organizador Multifuncional Grande para Brinquedos com Alça e Rodinhas" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Casa</span>
-                <h3 class="title">Carrinho Organizador Multifuncional Grande para Brinquedos com Alça e Rodinhas</h3>
-                <div class="price">R$ 43,99</div>
-                <a href="https://s.shopee.com.br/6L3NsGseXq" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
+    <div class="grid">
         
         <div class="card" data-category="Moda">
             <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/br-11134207-7r98o-m2fmtg5ffnbq7d" alt="Pingente Cruz Palito Crucifixo Liso Banhado Ouro 18k Masculino Feminino Antialergico Garantia 1 ano" loading="lazy">
+                <img src="https://cf.shopee.com.br/file/sg-11134201-824ie-mpkkh1jwu39qf9" alt="Running Shoes with Carbon Plate Breathable Mesh for Couples, Body Test Shock Absorption Marathon sn" loading="lazy">
             </div>
             <div class="card-body">
                 <span class="badge">Moda</span>
-                <h3 class="title">Pingente Cruz Palito Crucifixo Liso Banhado Ouro 18k Masculino Feminino Antialergico Garantia 1 ano</h3>
-                <div class="price">R$ 19,99</div>
-                <a href="https://s.shopee.com.br/9V0Pe5pC03" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+                <h3 class="title">Running Shoes with Carbon Plate Breathable Mesh for Couples, Body Test Shock Absorption Marathon sn</h3>
+                <div class="price">R$ 44,99</div>
+                <a href="https://s.shopee.com.br/1qayUXSwa6" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
             </div>
         </div>
         
-        <div class="card" data-category="Moda">
+        <div class="card" data-category="Casa & Utilidades">
             <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-8262q-mm2ep9lthjwg90" alt="Piercing Mamilo Par Prata Aço Cirúrgico 316L Antialérgico Hipoalergênico Feminino Masculino Acessório Corpo" loading="lazy">
+                <img src="https://cf.shopee.com.br/file/br-11134207-7qukw-ljprlepoawx2bb" alt="Kitt Jogo de Panela 5- peças + 10 Potes + 1 Jarra" loading="lazy">
             </div>
             <div class="card-body">
-                <span class="badge">Moda</span>
-                <h3 class="title">Piercing Mamilo Par Prata Aço Cirúrgico 316L Antialérgico Hipoalergênico Feminino Masculino Acessório Corpo</h3>
-                <div class="price">R$ 23,90</div>
-                <a href="https://s.shopee.com.br/AKZWdcm1JE" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+                <span class="badge">Casa & Utilidades</span>
+                <h3 class="title">Kitt Jogo de Panela 5- peças + 10 Potes + 1 Jarra</h3>
+                <div class="price">R$ 142,90</div>
+                <a href="https://s.shopee.com.br/qiRIhWkbw" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
             </div>
         </div>
         
-        <div class="card" data-category="Moda">
+        <div class="card" data-category="Eletrônicos">
             <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-825zt-ml46qra2zbph10" alt="Piercing Mamilo Par Rosa Aço Cirúrgico 316L Antialérgico Hipoalergênico Feminino Masculino Modelo Original Premium" loading="lazy">
+                <img src="https://cf.shopee.com.br/file/sg-11134201-822zq-mi3e40dv1p1j50" alt="Gabinete Gamer Pcyes Velyr Black Vulcan Lateral Vidro Temperado" loading="lazy">
             </div>
             <div class="card-body">
-                <span class="badge">Moda</span>
-                <h3 class="title">Piercing Mamilo Par Rosa Aço Cirúrgico 316L Antialérgico Hipoalergênico Feminino Masculino Modelo Original Premium</h3>
-                <div class="price">R$ 22,90</div>
-                <a href="https://s.shopee.com.br/AUswpvlNyH" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+                <span class="badge">Eletrônicos</span>
+                <h3 class="title">Gabinete Gamer Pcyes Velyr Black Vulcan Lateral Vidro Temperado</h3>
+                <div class="price">R$ 209,90</div>
+                <a href="https://s.shopee.com.br/gP16OXNwv" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
             </div>
         </div>
         
-        <div class="card" data-category="Moda">
+        <div class="card" data-category="Outros">
             <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/br-11134207-820ln-mn4rvueics8xa9" alt="Oculos de Sol Redondo Premium Flexivel Blogueira Moderno Luxo uv400 Feminino Masculino" loading="lazy">
+                <img src="https://cf.shopee.com.br/file/sg-11134201-825ay-mq1yfaa5id4x7b" alt="Bicicleta Elétrica Scooter Mova Way 4.0 500w 48v" loading="lazy">
             </div>
             <div class="card-body">
-                <span class="badge">Moda</span>
-                <h3 class="title">Oculos de Sol Redondo Premium Flexivel Blogueira Moderno Luxo uv400 Feminino Masculino</h3>
+                <span class="badge">Outros</span>
+                <h3 class="title">Bicicleta Elétrica Scooter Mova Way 4.0 500w 48v</h3>
+                <div class="price">R$ 3849,90</div>
+                <a href="https://s.shopee.com.br/1BLHhJVTw2" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Beleza">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/br-11134207-7r98o-mcb860z8fk682c" alt="Eudora Siàge Pro Cronology" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Beleza</span>
+                <h3 class="title">Eudora Siàge Pro Cronology</h3>
+                <div class="price">R$ 69,99</div>
+                <a href="https://s.shopee.com.br/111rV0W7H1" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Casa & Utilidades">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/br-11134207-81ztc-mjr44aguh8n6bf" alt="kit jogo de 11 peças + 1 Jarra com Tampa coisa de cozinha Potes Plásticos Vedação Alimentos" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Casa & Utilidades</span>
+                <h3 class="title">kit jogo de 11 peças + 1 Jarra com Tampa coisa de cozinha Potes Plásticos Vedação Alimentos</h3>
+                <div class="price">R$ 26,99</div>
+                <a href="https://s.shopee.com.br/BSkVTZHxs" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Eletrônicos">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/sg-11134201-8224z-mhifcuk7p79kcb" alt="Fone De Ouvido Sem Fio M10 TWS Bluetooth 5.3 display Led Touch" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Eletrônicos</span>
+                <h3 class="title">Fone De Ouvido Sem Fio M10 TWS Bluetooth 5.3 display Led Touch</h3>
+                <div class="price">R$ 21,99</div>
+                <a href="https://s.shopee.com.br/19KJAZvIr" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Eletrônicos">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/sg-11134201-7rffj-m9dxhfocrycn5d" alt="Parafusadeira de alta potência 26V/48V, caixa de armazenamento e mais de 30 acessórios (uso profissional)" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Eletrônicos</span>
+                <h3 class="title">Parafusadeira de alta potência 26V/48V, caixa de armazenamento e mais de 30 acessórios (uso profissional)</h3>
                 <div class="price">R$ 59,99</div>
-                <a href="https://s.shopee.com.br/9zwgF0nHzC" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+                <a href="https://s.shopee.com.br/W5au5Y1Hy" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
             </div>
         </div>
         
         <div class="card" data-category="Moda">
             <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/br-11134207-820lt-mmuhu643ugw4ab" alt="Óculos de Sol Porto Original Hexagonal Premium Oldstyle Retrô Classico uv400 Feminino Masculino" loading="lazy">
+                <img src="https://cf.shopee.com.br/file/sg-11134201-8260r-mjk5p0eqkb9gc6" alt="Moletom Canguru Cristão em Alta Qualidade Estampado YESHUA LEAO DE JUDA Blusa de Frio Religioso em Varias Cores" loading="lazy">
             </div>
             <div class="card-body">
                 <span class="badge">Moda</span>
-                <h3 class="title">Óculos de Sol Porto Original Hexagonal Premium Oldstyle Retrô Classico uv400 Feminino Masculino</h3>
+                <h3 class="title">Moletom Canguru Cristão em Alta Qualidade Estampado YESHUA LEAO DE JUDA Blusa de Frio Religioso em Varias Cores</h3>
+                <div class="price">R$ 59,90</div>
+                <a href="https://s.shopee.com.br/LmAhmYecx" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Casa & Utilidades">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/cn-11134207-7ras8-mbhvo90jyekt52" alt="Cortador de Legumes e Vegetais 16 em 1 Lâminas de Inox Acessório de Cozinha Prático e Resistente Fácil de Usar e Limpar" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Casa & Utilidades</span>
+                <h3 class="title">Cortador de Legumes e Vegetais 16 em 1 Lâminas de Inox Acessório de Cozinha Prático e Resistente Fácil de Usar e Limpar</h3>
+                <div class="price">R$ 38,50</div>
+                <a href="https://s.shopee.com.br/AAG6PqxDfs" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Moda">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/br-11134207-7r98o-mbaadmixtnrj1b" alt="Vestido Longo Com FORO e BOJO, Feminino Com manga Variados super confortáveis e leves qualidade e durabilidade" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Moda</span>
+                <h3 class="title">Vestido Longo Com FORO e BOJO, Feminino Com manga Variados super confortáveis e leves qualidade e durabilidade</h3>
+                <div class="price">R$ 85,99</div>
+                <a href="https://s.shopee.com.br/9zwgDXxr0r" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Moda">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/br-11134207-7r98o-mddnqzvfz6kh7b" alt="Kit 5 e 3  Camiseta Gola Polo Masculina 100% Algodão Varias Cores Camisa Basica Para Homem" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Moda</span>
+                <h3 class="title">Kit 5 e 3  Camiseta Gola Polo Masculina 100% Algodão Varias Cores Camisa Basica Para Homem</h3>
+                <div class="price">R$ 89,99</div>
+                <a href="https://s.shopee.com.br/2LXF7QH9Mi" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Beleza">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/br-11134201-820m0-mqy4rxcngxdw9b" alt="KIT lili 350ml creme e perfume acetinado corpo e mãos hidratante lily lulli cuide se bem" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Beleza</span>
+                <h3 class="title">KIT lili 350ml creme e perfume acetinado corpo e mãos hidratante lily lulli cuide se bem</h3>
+                <div class="price">R$ 43,15</div>
+                <a href="https://s.shopee.com.br/2VqfJjGW1l" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Outros">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/br-11134207-7r98o-m8k6ynton21d33" alt="Kit Calças Jeans masculina estica muito costura reforçada envio imediato NF" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Outros</span>
+                <h3 class="title">Kit Calças Jeans masculina estica muito costura reforçada envio imediato NF</h3>
+                <div class="price">R$ 139,99</div>
+                <a href="https://s.shopee.com.br/20uOioIQ2g" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Casa & Utilidades">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/br-11134207-81ztf-ml3q0qav7pj6f2" alt="Ventilador de Mesa 40 cm 10 Pás com 3 Velocidades Ventisol Turbo 10" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Casa & Utilidades</span>
+                <h3 class="title">Ventilador de Mesa 40 cm 10 Pás com 3 Velocidades Ventisol Turbo 10</h3>
+                <div class="price">R$ 149,90</div>
+                <a href="https://s.shopee.com.br/2BDov7Hmhj" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Outros">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/br-11134201-23030-i9ipbpxgmqov21" alt="Macacao Feminino Decotado Alcinha 2 Fendas Pantalona" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Outros</span>
+                <h3 class="title">Macacao Feminino Decotado Alcinha 2 Fendas Pantalona</h3>
                 <div class="price">R$ 49,99</div>
-                <a href="https://s.shopee.com.br/AAG6RJmeeF" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+                <a href="https://s.shopee.com.br/8KoSGRuJBw" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Casa & Utilidades">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/br-11134207-7r98o-m7k3xqhluz4a11" alt="Kit 3 Garrafa Copo Agua Squeeze C/ Adesivos Lembretes beber Agua Tendencia NOVA" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Casa & Utilidades</span>
+                <h3 class="title">Kit 3 Garrafa Copo Agua Squeeze C/ Adesivos Lembretes beber Agua Tendencia NOVA</h3>
+                <div class="price">R$ 29,99</div>
+                <a href="https://s.shopee.com.br/8V7sSktfqz" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Casa & Utilidades">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/br-11134207-820lm-mlmm9r4zls0419" alt="Jaqueta De Couro Masculina Veludo Casaco Inverno Com Capuz" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Casa & Utilidades</span>
+                <h3 class="title">Jaqueta De Couro Masculina Veludo Casaco Inverno Com Capuz</h3>
+                <div class="price">R$ 196,90</div>
+                <a href="https://s.shopee.com.br/80BbrpvZru" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+            </div>
+        </div>
+        
+        <div class="card" data-category="Casa & Utilidades">
+            <div class="img-container">
+                <img src="https://cf.shopee.com.br/file/br-11134207-81z1k-miefwom0en0jab" alt="KIT 3 Escova Secadora + Secador de Cabelo Portátil + Modelador de Cachos + Chapinha Profissional Rosa Potente Qualidade" loading="lazy">
+            </div>
+            <div class="card-body">
+                <span class="badge">Casa & Utilidades</span>
+                <h3 class="title">KIT 3 Escova Secadora + Secador de Cabelo Portátil + Modelador de Cachos + Chapinha Profissional Rosa Potente Qualidade</h3>
+                <div class="price">R$ 96,90</div>
+                <a href="https://s.shopee.com.br/8AV248uwWx" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
             </div>
         </div>
         
         <div class="card" data-category="Moda">
             <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/br-11134207-820lj-mlz80xl3sydc98" alt="Óculos de Sol Texas Aviador Clássico Premium Geométrico Masculino Feminino Metal uv400 Unissex" loading="lazy">
+                <img src="https://cf.shopee.com.br/file/br-11134207-7r98o-mchq1tzl0gfm58" alt="Kit 02 blusas de moletom masculina Bolso canguru com capuz Paris" loading="lazy">
             </div>
             <div class="card-body">
                 <span class="badge">Moda</span>
-                <h3 class="title">Óculos de Sol Texas Aviador Clássico Premium Geométrico Masculino Feminino Metal uv400 Unissex</h3>
-                <div class="price">R$ 59,99</div>
-                <a href="https://s.shopee.com.br/5fnh533mmO" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Beleza">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-824gx-mpugrw4woo3x78" alt="Dr. Nalan cinco vezes vitamina C creme sem rosto Natural rosto iluminando corretivo tom de pele maquiagem Nude creme fac" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Beleza</span>
-                <h3 class="title">Dr. Nalan cinco vezes vitamina C creme sem rosto Natural rosto iluminando corretivo tom de pele maquiagem Nude creme fac</h3>
-                <div class="price">R$ 409,47</div>
-                <a href="https://s.shopee.com.br/6fgEGtDS23" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Beleza">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134207-820nz-mncm0k52oaa0a1" alt="Numbuzin NO3 . Sem Filtro Tone Up Sun Serum 2 Tipos 50ml SPF50 + PA +/Bege TOPKOREA Envio Da Coreia" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Beleza</span>
-                <h3 class="title">Numbuzin NO3 . Sem Filtro Tone Up Sun Serum 2 Tipos 50ml SPF50 + PA +/Bege TOPKOREA Envio Da Coreia</h3>
-                <div class="price">R$ 100,00</div>
-                <a href="https://s.shopee.com.br/6VMo4aE5N2" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Beleza">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134207-824i5-mdzlbuqew8asfc" alt="Creme De Limpeza De Sementes De Maçã innisfree 150ml TOPKOREA Envio Da Coreia" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Beleza</span>
-                <h3 class="title">Creme De Limpeza De Sementes De Maçã innisfree 150ml TOPKOREA Envio Da Coreia</h3>
-                <div class="price">R$ 75,00</div>
-                <a href="https://s.shopee.com.br/6L3NsHEii1" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Beleza">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/br-11134207-820lh-mqf99iivlxj490" alt="Água Micelar Face Beautiful 200ml | Limpeza Facial Profunda Remove Maquiagem e Purifica a Pele" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Beleza</span>
-                <h3 class="title">Água Micelar Face Beautiful 200ml | Limpeza Facial Profunda Remove Maquiagem e Purifica a Pele</h3>
-                <div class="price">R$ 16,90</div>
-                <a href="https://s.shopee.com.br/6AjxfyFM30" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Beleza">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/sg-11134201-7rccq-lsv8c2cygl0h38" alt="Sabonete Primer Facial Pré Maquiagem Makeup Laborene 100ml" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Beleza</span>
-                <h3 class="title">Sabonete Primer Facial Pré Maquiagem Makeup Laborene 100ml</h3>
-                <div class="price">R$ 14,90</div>
-                <a href="https://s.shopee.com.br/60QXTfFzNz" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
-            </div>
-        </div>
-        
-        <div class="card" data-category="Beleza">
-            <div class="img-container">
-                <img src="https://cf.shopee.com.br/file/br-11134207-7r98o-lwzpimn5lganf9" alt="Batom Mágico Balm Lips-tick Aloe Vera Ação Hidratante Muda a Cor Ph/Temperatura Dos Lábios Maquiagem - Belle Angel" loading="lazy">
-            </div>
-            <div class="card-body">
-                <span class="badge">Beleza</span>
-                <h3 class="title">Batom Mágico Balm Lips-tick Aloe Vera Ação Hidratante Muda a Cor Ph/Temperatura Dos Lábios Maquiagem - Belle Angel</h3>
-                <div class="price">R$ 9,43</div>
-                <a href="https://s.shopee.com.br/5q77HMGciy" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
+                <h3 class="title">Kit 02 blusas de moletom masculina Bolso canguru com capuz Paris</h3>
+                <div class="price">R$ 96,99</div>
+                <a href="https://s.shopee.com.br/90493frlq8" target="_blank" rel="noopener" class="btn">Ver Oferta</a>
             </div>
         </div>
         
