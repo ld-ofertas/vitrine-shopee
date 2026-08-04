@@ -263,6 +263,26 @@ def generate_html(produtos):
             opacity: 0.8;
         }}
 
+        .site-header {{
+            text-align: center;
+            margin: 10px 0 16px 0;
+            padding: 0 5px;
+        }}
+        .site-header h1 {{
+            font-size: 1.6rem;
+            color: #222;
+            font-weight: 800;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }}
+        .site-header p {{
+            font-size: 0.85rem;
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.35;
+        }}
+
         .search-box {{ margin-bottom: 8px; }}
         .search-input {{
             width: 100%;
@@ -332,6 +352,11 @@ def generate_html(produtos):
             <button class="app-close-btn" onclick="closeAppBanner()">✕</button>
         </div>
     </div>
+
+    <header class="site-header">
+        <h1>Radar de Ofertas</h1>
+        <p>🎯 Nosso radar rastreia a Shopee em tempo real para trazer os achadinhos mais imperdíveis direto para você.</p>
+    </header>
 
     <div class="search-box">
         <input type="text" id="searchInput" class="search-input" placeholder="🔍 Pesquisar em centenas de produtos..." oninput="onSearchChange()">
@@ -473,9 +498,8 @@ def generate_html(produtos):
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html_content)
-    print("Sucesso: index.html gerado!")
+    print("Sucesso: index.html gerado com o cabeçalho!")
 
 if __name__ == "__main__":
     prods = fetch_shopee_products()
     generate_html(prods)
-
