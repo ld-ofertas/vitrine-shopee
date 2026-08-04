@@ -16,7 +16,6 @@ def safe_float(val, default=0.0):
 def categorizar_nome(nome):
     nome_lower = nome.lower()
     
-    # Eletrônicos & Tech
     if any(w in nome_lower for w in [
         "fone", "bluetooth", "smartwatch", "relogio", "celular", "gamer", "pc", "led", 
         "cabo", "carregador", "suporte", "camera", "som", "caixa", "drone", "tablet", 
@@ -24,8 +23,6 @@ def categorizar_nome(nome):
         "pendrive", "adaptador", "microfone", "headset"
     ]):
         return "Eletrônicos & Tech"
-    
-    # Casa & Cozinha
     elif any(w in nome_lower for w in [
         "panela", "jogo", "copo", "cozinha", "casa", "cortador", "jarra", "pote", "mesa", 
         "organizador", "vidro", "toalha", "lixeira", "prato", "talher", "air fryer", 
@@ -33,50 +30,37 @@ def categorizar_nome(nome):
         "prateleira", "cortina", "edredom", "cobertor", "mop", "vassoura"
     ]):
         return "Casa & Cozinha"
-    
-    # Moda & Calçados
     elif any(w in nome_lower for w in [
         "vestido", "moletom", "tenis", "shoes", "camisa", "camiseta", "roupa", "bolsa", 
         "oculos", "cristao", "calca", "bermuda", "shorts", "saia", "meia", "chinelo", 
         "sapatilha", "jaqueta", "casaco", "mochila", "carteira", "cinto", "boné"
     ]):
         return "Moda & Calçados"
-    
-    # Beleza & Saúde
     elif any(w in nome_lower for w in [
         "siage", "eudora", "batom", "maquiagem", "creme", "perfume", "skincare", "cabelo", 
         "shampoo", "condicionador", "esmalte", "pincel", "protetor", "sabonete", "serum", 
         "locao", "desodorante", "base", "rimel", "secador", "chapinha", "babyliss"
     ]):
         return "Beleza & Saúde"
-
-    # Infantil & Brinquedos
     elif any(w in nome_lower for w in [
         "brinquedo", "bebe", "infantil", "fralda", "mamadeira", "carrinho", "pelucia", 
         "boneca", "quebra cabeca", "mordedor", "babador", "chupeta"
     ]):
         return "Infantil & Brinquedos"
-
-    # Pet Shop
     elif any(w in nome_lower for w in [
         "cachorro", "gato", "pet", "racao", "coleira", "arranhador", "comedouro", "tapete higienico"
     ]):
         return "Pet Shop"
-    
-    # Ferramentas & Auto
     elif any(w in nome_lower for w in [
         "parafusadeira", "furadeira", "chave", "maleta", "automotivo", "lavadora", 
         "som automotivo", "capacete", "luva", "pneu", "bico", "bomba", "martelo", "alicate"
     ]):
         return "Ferramentas & Auto"
-    
-    # Esporte & Lazer
     elif any(w in nome_lower for w in [
         "bicicleta", "scooter", "bola", "academia", "elastico", "garrafa", "squeeze", 
         "camping", "pesca", "patins", "suplemento", "whey", "halter"
     ]):
         return "Esporte & Lazer"
-    
     else:
         return "Outras Ofertas"
 
@@ -100,7 +84,6 @@ def fetch_shopee_products():
     todos_produtos = []
     links_vistos = set()
 
-    # 1. Busca por Palavras-Chave
     for kw in TERMOS_BUSCA:
         timestamp = int(time.time())
         query = f"""
@@ -115,11 +98,9 @@ def fetch_shopee_products():
           }}
         }}
         """
-        
         payload = json.dumps({"query": query})
         factor = f"{APP_ID}{timestamp}{payload}{APP_SECRET}"
         signature = hashlib.sha256(factor.encode('utf-8')).hexdigest()
-
         headers = {
             'Content-Type': 'application/json',
             'Authorization': f'SHA256 Credential={APP_ID}, Timestamp={timestamp}, Signature={signature}'
@@ -129,7 +110,6 @@ def fetch_shopee_products():
             response = requests.post(url, headers=headers, data=payload, timeout=10)
             res_data = response.json()
             nodes = res_data.get("data", {}).get("productOfferV2", {}).get("nodes", [])
-            
             for item in nodes:
                 name = item.get("productName") or "Produto Shopee"
                 price_val = safe_float(item.get("price"))
@@ -150,7 +130,6 @@ def fetch_shopee_products():
         except Exception as e:
             print(f"Erro ao buscar termo '{kw}': {e}")
 
-    # 2. Ofertas Gerais (10 Páginas)
     for page in range(1, 11):
         timestamp = int(time.time())
         query = f"""
@@ -177,7 +156,6 @@ def fetch_shopee_products():
             response = requests.post(url, headers=headers, data=payload, timeout=10)
             res_data = response.json()
             nodes = res_data.get("data", {}).get("productOfferV2", {}).get("nodes", [])
-            
             for item in nodes:
                 name = item.get("productName") or "Produto Shopee"
                 price_val = safe_float(item.get("price"))
@@ -198,7 +176,6 @@ def fetch_shopee_products():
         except Exception as e:
             print(f"Erro ao buscar ofertas gerais pag {page}: {e}")
 
-    print(f"🔥 Total de produtos únicos obtidos: {len(todos_produtos)}")
     return todos_produtos
 
 def generate_html(produtos):
@@ -236,15 +213,12 @@ def generate_html(produtos):
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#ee4d2d">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Vitrine Shopee">
+    <link rel="manifest" href="manifest.json">
     <title>Vitrine Shopee</title>
     <style>
         * {{ box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }}
         body {{ background-color: #f4f4f6; padding: 10px; max-width: 1200px; margin: 0 auto; }}
         
-        /* Banner de Instalação do App */
         .app-banner {{
             background: linear-gradient(135deg, #ee4d2d, #ff7337);
             color: #ffffff;
@@ -376,6 +350,11 @@ def generate_html(produtos):
     </div>
 
     <script>
+        // Registrar Service Worker
+        if ('serviceWorker' in navigator) {{
+            navigator.serviceWorker.register('sw.js');
+        }}
+
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {{
             e.preventDefault();
@@ -383,6 +362,12 @@ def generate_html(produtos):
         }});
 
         function handleInstallApp() {{
+            // Se estiver rodando dentro do Google Sites (iframe)
+            if (window.self !== window.top) {{
+                window.open('https://aleandrogefune05-bot.github.io', '_blank');
+                return;
+            }}
+
             if (deferredPrompt) {{
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then(() => {{
@@ -390,12 +375,7 @@ def generate_html(produtos):
                     closeAppBanner();
                 }});
             }} else {{
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                if (isIOS) {{
-                    alert("📲 Para instalar no iPhone/iPad:\\n\\n1. Toque no botão 'Compartilhar' (ícone de quadrado com seta no Safari).\\n2. Role para baixo e selecione 'Adicionar à Tela de Início'.\\n3. Toque em 'Adicionar' no canto superior direito.");
-                }} else {{
-                    alert("📲 Para instalar no Android:\\n\\n1. Toque nos 3 pontinhos (⋮) do navegador.\\n2. Selecione 'Instalar aplicativo' ou 'Adicionar à tela inicial'.");
-                }}
+                alert("Para instalar o App:\\n\\n1. Abra o site no navegador Chrome.\\n2. Toque nos 3 pontinhos no canto superior.\\n3. Clique em 'Instalar aplicativo'.");
             }}
         }}
 
