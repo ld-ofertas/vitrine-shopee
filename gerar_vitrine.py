@@ -80,23 +80,15 @@ def categorizar_nome(nome):
     else:
         return "Outras Ofertas"
 
-# Lista de termos variados para buscar na API da Shopee por categorias
+# Lista ampla de buscas para trazer centenas de produtos
 TERMOS_BUSCA = [
-    # Eletrônicos & Tech
-    "fone bluetooth", "smartwatch", "carregador celular", "caixa de som bluetooth", "teclado gamer",
-    # Casa & Cozinha
-    "air fryer", "jogo de panelas", "mop limpeza", "organizador de cozinha", "lampada led",
-    # Moda & Calçados
-    "tenis masculino", "vestido feminino", "moletom", "bolsa feminina", "oculos de sol",
-    # Beleza & Saúde
-    "perfume eudora", "kit maquiagem", "skincare", "shampoo siage", "secador de cabelo",
-    # Infantil & Brinquedos
+    "fone bluetooth", "smartwatch", "carregador celular", "caixa de som bluetooth", "teclado gamer", "mouse sem fio",
+    "air fryer", "jogo de panelas", "mop limpeza", "organizador de cozinha", "lampada led", "jogo de cama",
+    "tenis masculino", "vestido feminino", "moletom", "bolsa feminina", "oculos de sol", "relogio masculino",
+    "perfume eudora", "kit maquiagem", "skincare", "shampoo siage", "secador de cabelo", "protetor solar",
     "brinquedo educativo", "carrinho controle remoto", "fralda bebe", "boneca",
-    # Pet Shop
     "racao cachorro", "arranhador gato", "tapete higienico",
-    # Ferramentas & Auto
     "parafusadeira", "kit ferramentas", "capacete moto",
-    # Esporte & Lazer
     "garrafa termica", "bicicleta", "elastico exercicio"
 ]
 
@@ -109,12 +101,12 @@ def fetch_shopee_products():
     todos_produtos = []
     links_vistos = set()
 
-    # 1. Busca por Palavras-Chave Variadas
+    # 1. Busca por Palavras-Chave
     for kw in TERMOS_BUSCA:
         timestamp = int(time.time())
         query = f"""
         query {{
-          productOfferV2(keyword: "{kw}", page: 1, limit: 20) {{
+          productOfferV2(keyword: "{kw}", page: 1, limit: 30) {{
             nodes {{
               productName
               price
@@ -136,7 +128,7 @@ def fetch_shopee_products():
 
         try:
             print(f"Buscando produtos para termo: '{kw}'...")
-            response = requests.post(url, headers=headers, data=payload, timeout=12)
+            response = requests.post(url, headers=headers, data=payload, timeout=10)
             res_data = response.json()
             
             nodes = res_data.get("data", {}).get("productOfferV2", {}).get("nodes", [])
@@ -160,17 +152,17 @@ def fetch_shopee_products():
                     })
                     novos += 1
 
-            print(f"Termo '{kw}': +{novos} produtos novos adicionados.")
-            time.sleep(0.15)
+            print(f"Termo '{kw}': +{novos} produtos.")
+            time.sleep(0.1)
         except Exception as e:
             print(f"Erro ao buscar termo '{kw}': {e}")
 
-    # 2. Busca pelas Ofertas Gerais para complementar
-    for page in range(1, 6):
+    # 2. Busca por Ofertas Gerais (10 Páginas)
+    for page in range(1, 11):
         timestamp = int(time.time())
         query = f"""
         query {{
-          productOfferV2(page: {page}, limit: 40) {{
+          productOfferV2(page: {page}, limit: 50) {{
             nodes {{
               productName
               price
@@ -190,9 +182,11 @@ def fetch_shopee_products():
 
         try:
             print(f"Buscando ofertas gerais página {page}...")
-            response = requests.post(url, headers=headers, data=payload, timeout=12)
+            response = requests.post(url, headers=headers, data=payload, timeout=10)
             res_data = response.json()
             nodes = res_data.get("data", {}).get("productOfferV2", {}).get("nodes", [])
+            
+            novos = 0
             for item in nodes:
                 name = item.get("productName") or "Produto Shopee"
                 price_val = safe_float(item.get("price"))
@@ -209,11 +203,13 @@ def fetch_shopee_products():
                         "link": link,
                         "categoria": cat
                     })
-            time.sleep(0.15)
+                    novos += 1
+            print(f"Ofertas gerais pag {page}: +{novos} produtos.")
+            time.sleep(0.1)
         except Exception as e:
             print(f"Erro ao buscar ofertas gerais pag {page}: {e}")
 
-    print(f"🔥 Total final de produtos cadastrados na vitrine: {len(todos_produtos)}")
+    print(f"🔥 Total de produtos únicos obtidos: {len(todos_produtos)}")
     return todos_produtos
 
 def generate_html(produtos):
