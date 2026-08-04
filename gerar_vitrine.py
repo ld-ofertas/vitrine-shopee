@@ -225,7 +225,7 @@ def generate_html(produtos):
             padding: 10px 14px;
             border-radius: 10px;
             margin-bottom: 12px;
-            display: flex;
+            display: none; /* CORREÇÃO AQUI: Escondido por padrão */
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 2px 8px rgba(238, 77, 45, 0.25);
@@ -352,12 +352,13 @@ def generate_html(produtos):
     <script>
         // Registrar Service Worker
         if ('serviceWorker' in navigator) {{
-            navigator.serviceWorker.register('sw.js');
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW erro:', err));
         }}
 
         let deferredPrompt = null;
 
-        // Captura o evento nativo de instalação do Android
+        // Captura o evento nativo de instalação do Android.
+        // O banner SÓ aparece quando o navegador confirmar que está pronto.
         window.addEventListener('beforeinstallprompt', (e) => {{
             e.preventDefault();
             deferredPrompt = e;
@@ -380,9 +381,8 @@ def generate_html(produtos):
                     }}
                     deferredPrompt = null;
                 }});
-            }} else {{
-                alert("O navegador ainda está preparando o instalador.\\n\\nAguarde alguns segundos e tente novamente, ou use o menu de 3 pontinhos do Chrome > 'Instalar aplicativo'.");
             }}
+            // Removemos o 'else' com o alert. Como o botão só aparece se o prompt existir, o alert não é mais necessário.
         }}
 
         function closeAppBanner() {{
