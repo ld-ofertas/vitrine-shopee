@@ -1,6 +1,6 @@
 {
-  "name": "Vitrine de Ofertas",
-  "short_name": "Ofertas",
+  "name": "Radar de Ofertas",
+  "short_name": "Radar de Ofertas",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
