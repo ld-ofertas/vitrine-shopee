@@ -214,7 +214,7 @@ def generate_html(produtos):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#ee4d2d">
     <link rel="manifest" href="manifest.json">
-    <title>Vitrine Shopee</title>
+    <title>Radar de Ofertas</title>
     <style>
         * {{ box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }}
         body {{ background-color: #f4f4f6; padding: 10px; max-width: 1200px; margin: 0 auto; }}
@@ -225,13 +225,20 @@ def generate_html(produtos):
             padding: 10px 14px;
             border-radius: 10px;
             margin-bottom: 12px;
-            display: none; /* CORREÇÃO AQUI: Escondido por padrão */
+            display: none;
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 2px 8px rgba(238, 77, 45, 0.25);
         }}
         .app-banner-info {{ display: flex; align-items: center; gap: 10px; }}
-        .app-banner-icon {{ font-size: 1.5rem; }}
+        .app-banner-icon-img {{
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #fff;
+            flex-shrink: 0;
+        }}
         .app-banner-text h4 {{ font-size: 0.85rem; font-weight: 700; margin-bottom: 2px; }}
         .app-banner-text p {{ font-size: 0.72rem; opacity: 0.95; }}
         .app-banner-actions {{ display: flex; align-items: center; gap: 8px; }}
@@ -314,9 +321,9 @@ def generate_html(produtos):
 
     <div class="app-banner" id="appBanner">
         <div class="app-banner-info">
-            <span class="app-banner-icon">📲</span>
+            <img src="icon-192.png" alt="Ícone" class="app-banner-icon-img">
             <div class="app-banner-text">
-                <h4>Instale nosso App de Ofertas</h4>
+                <h4>Instale o Radar de Ofertas</h4>
                 <p>Acesse as promoções direto da tela do seu celular</p>
             </div>
         </div>
@@ -350,15 +357,12 @@ def generate_html(produtos):
     </div>
 
     <script>
-        // Registrar Service Worker
         if ('serviceWorker' in navigator) {{
             navigator.serviceWorker.register('sw.js').catch(err => console.log('SW erro:', err));
         }}
 
         let deferredPrompt = null;
 
-        // Captura o evento nativo de instalação do Android.
-        // O banner SÓ aparece quando o navegador confirmar que está pronto.
         window.addEventListener('beforeinstallprompt', (e) => {{
             e.preventDefault();
             deferredPrompt = e;
@@ -367,9 +371,8 @@ def generate_html(produtos):
         }});
 
         function handleInstallApp() {{
-            // Se estiver dentro do Google Sites (iframe)
             if (window.self !== window.top) {{
-                window.open('https://aleandrogefune05-bot.github.io', '_blank');
+                window.open('https://ld-ofertas.github.io/vitrine-shopee/', '_blank');
                 return;
             }}
 
@@ -382,7 +385,6 @@ def generate_html(produtos):
                     deferredPrompt = null;
                 }});
             }}
-            // Removemos o 'else' com o alert. Como o botão só aparece se o prompt existir, o alert não é mais necessário.
         }}
 
         function closeAppBanner() {{
@@ -476,3 +478,4 @@ def generate_html(produtos):
 if __name__ == "__main__":
     prods = fetch_shopee_products()
     generate_html(prods)
+
