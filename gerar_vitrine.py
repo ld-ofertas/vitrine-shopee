@@ -17,95 +17,151 @@ def categorizar_nome(nome):
     nome_lower = nome.lower()
     
     # Eletrônicos & Tech
-    if any(w in nome_lower for w in ["fone", "bluetooth", "smartwatch", "relogio", "celular", "gamer", "pc", "led", "cabo", "carregador", "suporte", "camera", "som", "caixa", "drone", "tablet", "teclado", "mouse", "usb"]):
+    if any(w in nome_lower for w in [
+        "fone", "bluetooth", "smartwatch", "relogio", "celular", "gamer", "pc", "led", 
+        "cabo", "carregador", "suporte", "camera", "som", "caixa", "drone", "tablet", 
+        "teclado", "mouse", "usb", "alexa", "caixinha", "repetidor", "memoria", "ssd", 
+        "pendrive", "adaptador", "microfone", "headset"
+    ]):
         return "Eletrônicos & Tech"
     
     # Casa & Cozinha
-    elif any(w in nome_lower for w in ["panela", "jogo", "copo", "cozinha", "casa", "cortador", "jarra", "pote", "mesa", "organizador", "vidro", "toalha", "lixeira", "prato", "talher", "air fryer", "lampada", "tapete", "travesseiro", "lençol"]):
+    elif any(w in nome_lower for w in [
+        "panela", "jogo", "copo", "cozinha", "casa", "cortador", "jarra", "pote", "mesa", 
+        "organizador", "vidro", "toalha", "lixeira", "prato", "talher", "air fryer", 
+        "lampada", "tapete", "travesseiro", "lençol", "almofada", "frigideira", "espelho", 
+        "prateleira", "cortina", "edredom", "cobertor", "mop", "vassoura"
+    ]):
         return "Casa & Cozinha"
     
     # Moda & Calçados
-    elif any(w in nome_lower for w in ["vestido", "moletom", "tenis", "shoes", "camisa", "camiseta", "roupa", "bolsa", "oculos", "cristao", "calca", "bermuda", "shorts", "saia", "meia", "chinelo", "sapatilha", "jaqueta", "casaco"]):
+    elif any(w in nome_lower for w in [
+        "vestido", "moletom", "tenis", "shoes", "camisa", "camiseta", "roupa", "bolsa", 
+        "oculos", "cristao", "calca", "bermuda", "shorts", "saia", "meia", "chinelo", 
+        "sapatilha", "jaqueta", "casaco", "mochila", "carteira", "cinto", "boné"
+    ]):
         return "Moda & Calçados"
     
     # Beleza & Saúde
-    elif any(w in nome_lower for w in ["siage", "eudora", "batom", "maquiagem", "creme", "perfume", "skincare", "cabelo", "shampoo", "condicionador", "esmalte", "pincel", "protetor", "sabonete", "serum"]):
+    elif any(w in nome_lower for w in [
+        "siage", "eudora", "batom", "maquiagem", "creme", "perfume", "skincare", "cabelo", 
+        "shampoo", "condicionador", "esmalte", "pincel", "protetor", "sabonete", "serum", 
+        "locao", "desodorante", "base", "rimel", "secador", "chapinha", "babyliss"
+    ]):
         return "Beleza & Saúde"
+
+    # Infantil & Brinquedos
+    elif any(w in nome_lower for w in [
+        "brinquedo", "bebe", "infantil", "fralda", "mamadeira", "carrinho", "pelucia", 
+        "boneca", "quebra cabeca", "mordedor", "babador", "chupeta"
+    ]):
+        return "Infantil & Brinquedos"
+
+    # Pet Shop
+    elif any(w in nome_lower for w in [
+        "cachorro", "gato", "pet", "racao", "coleira", "arranhador", "comedouro", "tapete higienico"
+    ]):
+        return "Pet Shop"
     
     # Ferramentas & Auto
-    elif any(w in nome_lower for w in ["parafusadeira", "furadeira", "chave", "maleta", "automotivo", "lavadora", "som automotivo", "capacete", "luva", "pneu", "bico", "bomba", "martelo", "alicate"]):
+    elif any(w in nome_lower for w in [
+        "parafusadeira", "furadeira", "chave", "maleta", "automotivo", "lavadora", 
+        "som automotivo", "capacete", "luva", "pneu", "bico", "bomba", "martelo", "alicate"
+    ]):
         return "Ferramentas & Auto"
     
     # Esporte & Lazer
-    elif any(w in nome_lower for w in ["bicicleta", "scooter", "bola", "academia", "elastico", "garrafa", "squeeze", "camping", "pesca", "mochila", "patins"]):
+    elif any(w in nome_lower for w in [
+        "bicicleta", "scooter", "bola", "academia", "elastico", "garrafa", "squeeze", 
+        "camping", "pesca", "patins", "suplemento", "whey", "halter"
+    ]):
         return "Esporte & Lazer"
     
     else:
-        return "Geral"
+        return "Outras Ofertas"
 
-def fetch_shopee_products(limit=40):
+def fetch_shopee_products(max_pages=15, limit_per_page=40):
     if not APP_ID or not APP_SECRET:
         print("Erro: Credenciais SHOPEE_APP_ID e SHOPEE_APP_SECRET não configuradas.")
         return []
 
-    timestamp = int(time.time())
-    query = f"""
-    query {{
-      productOfferV2(page: 1, limit: {limit}) {{
-        nodes {{
-          productName
-          price
-          imageUrl
-          offerLink
-        }}
-      }}
-    }}
-    """
-    
-    payload = json.dumps({"query": query})
-    factor = f"{APP_ID}{timestamp}{payload}{APP_SECRET}"
-    signature = hashlib.sha256(factor.encode('utf-8')).hexdigest()
-
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': f'SHA256 Credential={APP_ID}, Timestamp={timestamp}, Signature={signature}'
-    }
-
     url = "https://open-api.affiliate.shopee.com.br/graphql"
-    
-    try:
-        response = requests.post(url, headers=headers, data=payload, timeout=20)
-        res_data = response.json()
-        nodes = res_data.get("data", {}).get("productOfferV2", {}).get("nodes", [])
+    todos_produtos = []
+    links_vistos = set()
+
+    for page in range(1, max_pages + 1):
+        timestamp = int(time.time())
+        query = f"""
+        query {{
+          productOfferV2(page: {page}, limit: {limit_per_page}) {{
+            nodes {{
+              productName
+              price
+              imageUrl
+              offerLink
+            }}
+          }}
+        }}
+        """
         
-        produtos = []
-        for item in nodes:
-            name = item.get("productName") or "Produto Shopee"
-            price_val = safe_float(item.get("price"))
-            img = item.get("imageUrl") or ""
-            link = item.get("offerLink") or "#"
-            cat = categorizar_nome(name)
+        payload = json.dumps({"query": query})
+        factor = f"{APP_ID}{timestamp}{payload}{APP_SECRET}"
+        signature = hashlib.sha256(factor.encode('utf-8')).hexdigest()
 
-            if img and link != "#":
-                produtos.append({
-                    "title": name,
-                    "price": f"R$ {price_val:.2f}".replace(".", ","),
-                    "image": img,
-                    "link": link,
-                    "categoria": cat
-                })
-        return produtos
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': f'SHA256 Credential={APP_ID}, Timestamp={timestamp}, Signature={signature}'
+        }
 
-    except Exception as e:
-        print(f"Erro ao buscar ofertas na Shopee: {e}")
-        return []
+        try:
+            print(f"Buscando página {page} de {max_pages} na Shopee...")
+            response = requests.post(url, headers=headers, data=payload, timeout=15)
+            res_data = response.json()
+            
+            if "errors" in res_data:
+                print(f"Aviso API página {page}: {res_data['errors']}")
+                break
+
+            nodes = res_data.get("data", {}).get("productOfferV2", {}).get("nodes", [])
+            
+            if not nodes:
+                print(f"Página {page} sem novos produtos.")
+                break
+
+            novos_itens = 0
+            for item in nodes:
+                name = item.get("productName") or "Produto Shopee"
+                price_val = safe_float(item.get("price"))
+                img = item.get("imageUrl") or ""
+                link = item.get("offerLink") or "#"
+                cat = categorizar_nome(name)
+
+                if img and link != "#" and link not in links_vistos:
+                    links_vistos.add(link)
+                    todos_produtos.append({
+                        "title": name,
+                        "price": f"R$ {price_val:.2f}".replace(".", ","),
+                        "image": img,
+                        "link": link,
+                        "categoria": cat
+                    })
+                    novos_itens += 1
+
+            print(f"Página {page}: +{novos_itens} produtos adicionados.")
+            if novos_itens == 0 and page > 3:
+                break
+
+            time.sleep(0.2)
+        except Exception as e:
+            print(f"Erro ao buscar página {page}: {e}")
+            break
+
+    print(f"🔥 Total de produtos únicos obtidos: {len(todos_produtos)}")
+    return todos_produtos
 
 def generate_html(produtos):
-    if not produtos:
-        print("Aviso: Nenhum produto foi retornado da API.")
-        produtos = []
-
-    categorias_presentes = list(dict.fromkeys([p["categoria"] for p in produtos]))
+    categorias_ordenadas = ["Eletrônicos & Tech", "Casa & Cozinha", "Moda & Calçados", "Beleza & Saúde", "Infantil & Brinquedos", "Pet Shop", "Ferramentas & Auto", "Esporte & Lazer", "Outras Ofertas"]
+    categorias_presentes = [c for c in categorias_ordenadas if any(p["categoria"] == c for p in produtos)]
     
     tabs_html = '<button class="tab-btn active" onclick="setCategory(\'all\', this)">🔥 Todos</button>'
     for cat in categorias_presentes:
@@ -113,10 +169,11 @@ def generate_html(produtos):
 
     cards_html = ""
     for p in produtos:
+        title_escaped = p['title'].replace('"', '&quot;')
         cards_html += f"""
-        <div class="card" data-category="{p['categoria']}" data-title="{p['title'].replace('"', '&quot;')}">
+        <div class="card" data-category="{p['categoria']}" data-title="{title_escaped}">
             <div class="img-container">
-                <img src="{p['image']}" alt="{p['title']}" loading="lazy">
+                <img src="{p['image']}" alt="{title_escaped}" loading="lazy">
             </div>
             <div class="card-body">
                 <span class="badge">{p['categoria']}</span>
@@ -137,7 +194,7 @@ def generate_html(produtos):
         * {{ box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }}
         body {{ background-color: #f4f4f6; padding: 10px; max-width: 1200px; margin: 0 auto; }}
         
-        .search-box {{ margin-bottom: 10px; }}
+        .search-box {{ margin-bottom: 8px; }}
         .search-input {{
             width: 100%;
             padding: 10px 16px;
@@ -150,9 +207,17 @@ def generate_html(produtos):
         }}
         .search-input:focus {{ border-color: #ee4d2d; }}
         
+        .counter-bar {{
+            font-size: 0.75rem;
+            color: #666;
+            margin-bottom: 8px;
+            padding-left: 4px;
+            font-weight: 500;
+        }}
+
         .tabs {{ display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; scrollbar-width: none; }}
         .tabs::-webkit-scrollbar {{ display: none; }}
-        .tab-btn {{ background: #fff; border: 1px solid #ddd; padding: 6px 14px; border-radius: 18px; font-size: 0.8rem; font-weight: 600; color: #555; white-space: nowrap; cursor: pointer; }}
+        .tab-btn {{ background: #fff; border: 1px solid #ddd; padding: 6px 14px; border-radius: 18px; font-size: 0.8rem; font-weight: 600; color: #555; white-space: nowrap; cursor: pointer; transition: all 0.2s; }}
         .tab-btn.active {{ background: #ee4d2d; color: #fff; border-color: #ee4d2d; }}
         
         .grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 10px; }}
@@ -165,13 +230,32 @@ def generate_html(produtos):
         .price {{ font-size: 0.95rem; font-weight: 700; color: #ee4d2d; margin-bottom: 8px; }}
         .btn {{ text-align: center; background: #ee4d2d; color: #ffffff; text-decoration: none; padding: 6px 0; border-radius: 4px; font-weight: 600; font-size: 0.8rem; display: block; }}
         
+        .load-more-container {{ text-align: center; margin: 20px 0 10px 0; }}
+        .load-more-btn {{
+            background: #fff;
+            color: #ee4d2d;
+            border: 2px solid #ee4d2d;
+            padding: 10px 24px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }}
+        .load-more-btn:hover {{ background: #ee4d2d; color: #fff; }}
+
         .no-results {{ display: none; text-align: center; padding: 30px; color: #777; grid-column: 1 / -1; }}
     </style>
 </head>
 <body>
 
     <div class="search-box">
-        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Pesquisar produtos na vitrine..." oninput="filterProducts()">
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Pesquisar em centenas de produtos..." oninput="onSearchChange()">
+    </div>
+
+    <div class="counter-bar" id="counterBar">
+        Carregando produtos...
     </div>
 
     <div class="tabs">
@@ -185,20 +269,33 @@ def generate_html(produtos):
         </div>
     </div>
 
+    <div class="load-more-container">
+        <button class="load-more-btn" id="loadMoreBtn" onclick="loadMore()">➕ Carregar Mais Produtos</button>
+    </div>
+
     <script>
         let currentCategory = 'all';
+        let visibleLimit = 24;
+        const PAGE_SIZE = 24;
 
         function setCategory(category, element) {{
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
             currentCategory = category;
+            visibleLimit = PAGE_SIZE;
+            filterProducts();
+        }}
+
+        function onSearchChange() {{
+            visibleLimit = PAGE_SIZE;
             filterProducts();
         }}
 
         function filterProducts() {{
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
-            const cards = document.querySelectorAll('.card');
-            let visibleCount = 0;
+            const cards = Array.from(document.querySelectorAll('.card'));
+            
+            let matchingCards = [];
 
             cards.forEach(card => {{
                 const cat = card.getAttribute('data-category');
@@ -208,18 +305,49 @@ def generate_html(produtos):
                 const matchesSearch = query === '' || title.includes(query) || cat.toLowerCase().includes(query);
 
                 if (matchesCategory && matchesSearch) {{
-                    card.style.display = 'flex';
-                    visibleCount++;
+                    matchingCards.push(card);
                 }} else {{
                     card.style.display = 'none';
                 }}
             }});
 
+            matchingCards.forEach((card, index) => {{
+                if (index < visibleLimit) {{
+                    card.style.display = 'flex';
+                }} else {{
+                    card.style.display = 'none';
+                }}
+            }});
+
+            const counterBar = document.getElementById('counterBar');
+            const showing = Math.min(visibleLimit, matchingCards.length);
+            if (counterBar) {{
+                counterBar.innerText = `Exibindo ${{showing}} de ${{matchingCards.length}} ofertas disponíveis`;
+            }}
+
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            if (loadMoreBtn) {{
+                if (visibleLimit < matchingCards.length) {{
+                    loadMoreBtn.style.display = 'inline-block';
+                }} else {{
+                    loadMoreBtn.style.display = 'none';
+                }}
+            }}
+
             const noResults = document.getElementById('noResults');
             if (noResults) {{
-                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+                noResults.style.display = matchingCards.length === 0 ? 'block' : 'none';
             }}
         }}
+
+        function loadMore() {{
+            visibleLimit += PAGE_SIZE;
+            filterProducts();
+        }}
+
+        document.addEventListener('DOMContentLoaded', () => {{
+            filterProducts();
+        }});
     </script>
 </body>
 </html>
@@ -227,8 +355,9 @@ def generate_html(produtos):
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html_content)
-    print("Sucesso: index.html gerado com sucesso!")
+    print("Sucesso: index.html completo gerado!")
 
 if __name__ == "__main__":
-    prods = fetch_shopee_products(limit=40)
+    # Busca 15 páginas x 40 produtos = até 600 produtos reais!
+    prods = fetch_shopee_products(max_pages=15, limit_per_page=40)
     generate_html(prods)
