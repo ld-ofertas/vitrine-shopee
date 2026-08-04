@@ -263,24 +263,39 @@ def generate_html(produtos):
             opacity: 0.8;
         }}
 
-        .site-header {{
+        .hero-header {{
+            background: #ffffff;
             text-align: center;
-            margin: 10px 0 16px 0;
-            padding: 0 5px;
+            padding: 18px 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            border: 1px solid #eaeaea;
         }}
-        .site-header h1 {{
-            font-size: 1.6rem;
-            color: #222;
+        .hero-badge {{
+            display: inline-block;
+            background: #fff0ed;
+            color: #ee4d2d;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }}
+        .hero-header h1 {{
+            font-size: 1.45rem;
+            color: #111;
             font-weight: 800;
             margin-bottom: 4px;
             letter-spacing: -0.5px;
         }}
-        .site-header p {{
-            font-size: 0.85rem;
-            color: #555;
-            max-width: 600px;
+        .hero-header p {{
+            font-size: 0.8rem;
+            color: #666;
+            max-width: 520px;
             margin: 0 auto;
-            line-height: 1.35;
+            line-height: 1.4;
         }}
 
         .search-box {{ margin-bottom: 8px; }}
@@ -353,9 +368,10 @@ def generate_html(produtos):
         </div>
     </div>
 
-    <header class="site-header">
+    <header class="hero-header">
+        <div class="hero-badge">📡 RASTREAMENTO EM TEMPO REAL</div>
         <h1>Radar de Ofertas</h1>
-        <p>🎯 Nosso radar rastreia a Shopee em tempo real para trazer os achadinhos mais imperdíveis direto para você.</p>
+        <p>Nosso radar rastreia a Shopee em tempo real para trazer os achadinhos mais imperdíveis direto para você.</p>
     </header>
 
     <div class="search-box">
@@ -498,7 +514,7 @@ def generate_html(produtos):
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html_content)
-    print("Sucesso: index.html gerado com o cabeçalho!")
+    print("Sucesso: index.html gerado com o novo cabeçalho moderno!")
 
 if __name__ == "__main__":
     prods = fetch_shopee_products()
