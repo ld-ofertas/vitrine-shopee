@@ -80,7 +80,6 @@ def categorizar_nome(nome):
     else:
         return "Outras Ofertas"
 
-# Lista ampla de buscas para trazer centenas de produtos
 TERMOS_BUSCA = [
     "fone bluetooth", "smartwatch", "carregador celular", "caixa de som bluetooth", "teclado gamer", "mouse sem fio",
     "air fryer", "jogo de panelas", "mop limpeza", "organizador de cozinha", "lampada led", "jogo de cama",
@@ -127,13 +126,10 @@ def fetch_shopee_products():
         }
 
         try:
-            print(f"Buscando produtos para termo: '{kw}'...")
             response = requests.post(url, headers=headers, data=payload, timeout=10)
             res_data = response.json()
-            
             nodes = res_data.get("data", {}).get("productOfferV2", {}).get("nodes", [])
             
-            novos = 0
             for item in nodes:
                 name = item.get("productName") or "Produto Shopee"
                 price_val = safe_float(item.get("price"))
@@ -150,14 +146,11 @@ def fetch_shopee_products():
                         "link": link,
                         "categoria": cat
                     })
-                    novos += 1
-
-            print(f"Termo '{kw}': +{novos} produtos.")
             time.sleep(0.1)
         except Exception as e:
             print(f"Erro ao buscar termo '{kw}': {e}")
 
-    # 2. Busca por Ofertas Gerais (10 Páginas)
+    # 2. Ofertas Gerais (10 Páginas)
     for page in range(1, 11):
         timestamp = int(time.time())
         query = f"""
@@ -181,12 +174,10 @@ def fetch_shopee_products():
         }
 
         try:
-            print(f"Buscando ofertas gerais página {page}...")
             response = requests.post(url, headers=headers, data=payload, timeout=10)
             res_data = response.json()
             nodes = res_data.get("data", {}).get("productOfferV2", {}).get("nodes", [])
             
-            novos = 0
             for item in nodes:
                 name = item.get("productName") or "Produto Shopee"
                 price_val = safe_float(item.get("price"))
@@ -203,8 +194,6 @@ def fetch_shopee_products():
                         "link": link,
                         "categoria": cat
                     })
-                    novos += 1
-            print(f"Ofertas gerais pag {page}: +{novos} produtos.")
             time.sleep(0.1)
         except Exception as e:
             print(f"Erro ao buscar ofertas gerais pag {page}: {e}")
@@ -246,11 +235,53 @@ def generate_html(produtos):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ee4d2d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Vitrine Shopee">
     <title>Vitrine Shopee</title>
     <style>
         * {{ box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }}
         body {{ background-color: #f4f4f6; padding: 10px; max-width: 1200px; margin: 0 auto; }}
         
+        /* Banner de Instalação do App */
+        .app-banner {{
+            background: linear-gradient(135deg, #ee4d2d, #ff7337);
+            color: #ffffff;
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(238, 77, 45, 0.25);
+        }}
+        .app-banner-info {{ display: flex; align-items: center; gap: 10px; }}
+        .app-banner-icon {{ font-size: 1.5rem; }}
+        .app-banner-text h4 {{ font-size: 0.85rem; font-weight: 700; margin-bottom: 2px; }}
+        .app-banner-text p {{ font-size: 0.72rem; opacity: 0.95; }}
+        .app-banner-actions {{ display: flex; align-items: center; gap: 8px; }}
+        .app-install-btn {{
+            background: #ffffff;
+            color: #ee4d2d;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }}
+        .app-close-btn {{
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0 4px;
+            opacity: 0.8;
+        }}
+
         .search-box {{ margin-bottom: 8px; }}
         .search-input {{
             width: 100%;
@@ -307,6 +338,20 @@ def generate_html(produtos):
 </head>
 <body>
 
+    <div class="app-banner" id="appBanner">
+        <div class="app-banner-info">
+            <span class="app-banner-icon">📲</span>
+            <div class="app-banner-text">
+                <h4>Instale nosso App de Ofertas</h4>
+                <p>Acesse as promoções direto da tela do seu celular</p>
+            </div>
+        </div>
+        <div class="app-banner-actions">
+            <button class="app-install-btn" onclick="handleInstallApp()">Instalar</button>
+            <button class="app-close-btn" onclick="closeAppBanner()">✕</button>
+        </div>
+    </div>
+
     <div class="search-box">
         <input type="text" id="searchInput" class="search-input" placeholder="🔍 Pesquisar em centenas de produtos..." oninput="onSearchChange()">
     </div>
@@ -331,6 +376,34 @@ def generate_html(produtos):
     </div>
 
     <script>
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {{
+            e.preventDefault();
+            deferredPrompt = e;
+        }});
+
+        function handleInstallApp() {{
+            if (deferredPrompt) {{
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(() => {{
+                    deferredPrompt = null;
+                    closeAppBanner();
+                }});
+            }} else {{
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (isIOS) {{
+                    alert("📲 Para instalar no iPhone/iPad:\\n\\n1. Toque no botão 'Compartilhar' (ícone de quadrado com seta no Safari).\\n2. Role para baixo e selecione 'Adicionar à Tela de Início'.\\n3. Toque em 'Adicionar' no canto superior direito.");
+                }} else {{
+                    alert("📲 Para instalar no Android:\\n\\n1. Toque nos 3 pontinhos (⋮) do navegador.\\n2. Selecione 'Instalar aplicativo' ou 'Adicionar à tela inicial'.");
+                }}
+            }}
+        }}
+
+        function closeAppBanner() {{
+            const banner = document.getElementById('appBanner');
+            if (banner) banner.style.display = 'none';
+        }}
+
         let currentCategory = 'all';
         let visibleLimit = 24;
         const PAGE_SIZE = 24;
