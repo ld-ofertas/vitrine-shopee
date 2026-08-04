@@ -121,6 +121,7 @@ def fetch_shopee_products():
                     links_vistos.add(link)
                     todos_produtos.append({
                         "title": name,
+                        "price_val": price_val,
                         "price": f"R$ {price_val:.2f}".replace(".", ","),
                         "image": img,
                         "link": link,
@@ -167,6 +168,7 @@ def fetch_shopee_products():
                     links_vistos.add(link)
                     todos_produtos.append({
                         "title": name,
+                        "price_val": price_val,
                         "price": f"R$ {price_val:.2f}".replace(".", ","),
                         "image": img,
                         "link": link,
@@ -266,25 +268,36 @@ def generate_html(produtos):
         .hero-header {{
             background: #ffffff;
             text-align: center;
-            padding: 18px 16px;
+            padding: 22px 16px;
             border-radius: 12px;
             margin-bottom: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.04);
             border: 1px solid #eaeaea;
         }}
-        .hero-badge {{
-            display: inline-block;
-            background: #fff0ed;
-            color: #ee4d2d;
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 20px;
-            margin-bottom: 6px;
-            letter-spacing: 0.3px;
+        .brand-logo {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }}
+        .logo-icon {{
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #ee4d2d, #ff7337);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(238, 77, 45, 0.3);
+        }}
+        .logo-icon svg {{
+            width: 24px;
+            height: 24px;
+            fill: #ffffff;
         }}
         .hero-header h1 {{
-            font-size: 1.45rem;
+            font-size: 1.5rem;
             color: #111;
             font-weight: 800;
             margin-bottom: 4px;
@@ -369,9 +382,15 @@ def generate_html(produtos):
     </div>
 
     <header class="hero-header">
-        <div class="hero-badge">📡 RASTREAMENTO EM TEMPO REAL</div>
+        <div class="brand-logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12H16A4,4 0 0,0 12,8V6M12,10A2,2 0 0,1 14,12H13V13H11V12A2,2 0 0,1 12,10Z"/>
+                </svg>
+            </div>
+        </div>
         <h1>Radar de Ofertas</h1>
-        <p>Nosso radar rastreia a Shopee em tempo real para trazer os achadinhos mais imperdíveis direto para você.</p>
+        <p>🎯 Nosso radar rastreia a Shopee em tempo real para trazer os achadinhos mais imperdíveis direto para você.</p>
     </header>
 
     <div class="search-box">
@@ -514,8 +533,10 @@ def generate_html(produtos):
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html_content)
-    print("Sucesso: index.html gerado com o novo cabeçalho moderno!")
+    print("Sucesso: index.html gerado com sucesso!")
 
 if __name__ == "__main__":
     prods = fetch_shopee_products()
+    prods.sort(key=lambda x: x["price_val"])
     generate_html(prods)
+
