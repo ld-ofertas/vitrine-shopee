@@ -355,14 +355,18 @@ def generate_html(produtos):
             navigator.serviceWorker.register('sw.js');
         }}
 
-        let deferredPrompt;
+        let deferredPrompt = null;
+
+        // Captura o evento nativo de instalação do Android
         window.addEventListener('beforeinstallprompt', (e) => {{
             e.preventDefault();
             deferredPrompt = e;
+            const banner = document.getElementById('appBanner');
+            if (banner) banner.style.display = 'flex';
         }});
 
         function handleInstallApp() {{
-            // Se estiver rodando dentro do Google Sites (iframe)
+            // Se estiver dentro do Google Sites (iframe)
             if (window.self !== window.top) {{
                 window.open('https://aleandrogefune05-bot.github.io', '_blank');
                 return;
@@ -370,12 +374,14 @@ def generate_html(produtos):
 
             if (deferredPrompt) {{
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(() => {{
+                deferredPrompt.userChoice.then((choiceResult) => {{
+                    if (choiceResult.outcome === 'accepted') {{
+                        closeAppBanner();
+                    }}
                     deferredPrompt = null;
-                    closeAppBanner();
                 }});
             }} else {{
-                alert("Para instalar o App:\\n\\n1. Abra o site no navegador Chrome.\\n2. Toque nos 3 pontinhos no canto superior.\\n3. Clique em 'Instalar aplicativo'.");
+                alert("O navegador ainda está preparando o instalador.\\n\\nAguarde alguns segundos e tente novamente, ou use o menu de 3 pontinhos do Chrome > 'Instalar aplicativo'.");
             }}
         }}
 
