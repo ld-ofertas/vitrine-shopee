@@ -80,7 +80,27 @@ def categorizar_nome(nome):
     else:
         return "Outras Ofertas"
 
-def fetch_shopee_products(max_pages=15, limit_per_page=40):
+# Lista de termos variados para buscar na API da Shopee por categorias
+TERMOS_BUSCA = [
+    # Eletrônicos & Tech
+    "fone bluetooth", "smartwatch", "carregador celular", "caixa de som bluetooth", "teclado gamer",
+    # Casa & Cozinha
+    "air fryer", "jogo de panelas", "mop limpeza", "organizador de cozinha", "lampada led",
+    # Moda & Calçados
+    "tenis masculino", "vestido feminino", "moletom", "bolsa feminina", "oculos de sol",
+    # Beleza & Saúde
+    "perfume eudora", "kit maquiagem", "skincare", "shampoo siage", "secador de cabelo",
+    # Infantil & Brinquedos
+    "brinquedo educativo", "carrinho controle remoto", "fralda bebe", "boneca",
+    # Pet Shop
+    "racao cachorro", "arranhador gato", "tapete higienico",
+    # Ferramentas & Auto
+    "parafusadeira", "kit ferramentas", "capacete moto",
+    # Esporte & Lazer
+    "garrafa termica", "bicicleta", "elastico exercicio"
+]
+
+def fetch_shopee_products():
     if not APP_ID or not APP_SECRET:
         print("Erro: Credenciais SHOPEE_APP_ID e SHOPEE_APP_SECRET não configuradas.")
         return []
@@ -89,11 +109,12 @@ def fetch_shopee_products(max_pages=15, limit_per_page=40):
     todos_produtos = []
     links_vistos = set()
 
-    for page in range(1, max_pages + 1):
+    # 1. Busca por Palavras-Chave Variadas
+    for kw in TERMOS_BUSCA:
         timestamp = int(time.time())
         query = f"""
         query {{
-          productOfferV2(page: {page}, limit: {limit_per_page}) {{
+          productOfferV2(keyword: "{kw}", page: 1, limit: 20) {{
             nodes {{
               productName
               price
@@ -114,21 +135,13 @@ def fetch_shopee_products(max_pages=15, limit_per_page=40):
         }
 
         try:
-            print(f"Buscando página {page} de {max_pages} na Shopee...")
-            response = requests.post(url, headers=headers, data=payload, timeout=15)
+            print(f"Buscando produtos para termo: '{kw}'...")
+            response = requests.post(url, headers=headers, data=payload, timeout=12)
             res_data = response.json()
             
-            if "errors" in res_data:
-                print(f"Aviso API página {page}: {res_data['errors']}")
-                break
-
             nodes = res_data.get("data", {}).get("productOfferV2", {}).get("nodes", [])
             
-            if not nodes:
-                print(f"Página {page} sem novos produtos.")
-                break
-
-            novos_itens = 0
+            novos = 0
             for item in nodes:
                 name = item.get("productName") or "Produto Shopee"
                 price_val = safe_float(item.get("price"))
@@ -145,22 +158,70 @@ def fetch_shopee_products(max_pages=15, limit_per_page=40):
                         "link": link,
                         "categoria": cat
                     })
-                    novos_itens += 1
+                    novos += 1
 
-            print(f"Página {page}: +{novos_itens} produtos adicionados.")
-            if novos_itens == 0 and page > 3:
-                break
-
-            time.sleep(0.2)
+            print(f"Termo '{kw}': +{novos} produtos novos adicionados.")
+            time.sleep(0.15)
         except Exception as e:
-            print(f"Erro ao buscar página {page}: {e}")
-            break
+            print(f"Erro ao buscar termo '{kw}': {e}")
 
-    print(f"🔥 Total de produtos únicos obtidos: {len(todos_produtos)}")
+    # 2. Busca pelas Ofertas Gerais para complementar
+    for page in range(1, 6):
+        timestamp = int(time.time())
+        query = f"""
+        query {{
+          productOfferV2(page: {page}, limit: 40) {{
+            nodes {{
+              productName
+              price
+              imageUrl
+              offerLink
+            }}
+          }}
+        }}
+        """
+        payload = json.dumps({"query": query})
+        factor = f"{APP_ID}{timestamp}{payload}{APP_SECRET}"
+        signature = hashlib.sha256(factor.encode('utf-8')).hexdigest()
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': f'SHA256 Credential={APP_ID}, Timestamp={timestamp}, Signature={signature}'
+        }
+
+        try:
+            print(f"Buscando ofertas gerais página {page}...")
+            response = requests.post(url, headers=headers, data=payload, timeout=12)
+            res_data = response.json()
+            nodes = res_data.get("data", {}).get("productOfferV2", {}).get("nodes", [])
+            for item in nodes:
+                name = item.get("productName") or "Produto Shopee"
+                price_val = safe_float(item.get("price"))
+                img = item.get("imageUrl") or ""
+                link = item.get("offerLink") or "#"
+                cat = categorizar_nome(name)
+
+                if img and link != "#" and link not in links_vistos:
+                    links_vistos.add(link)
+                    todos_produtos.append({
+                        "title": name,
+                        "price": f"R$ {price_val:.2f}".replace(".", ","),
+                        "image": img,
+                        "link": link,
+                        "categoria": cat
+                    })
+            time.sleep(0.15)
+        except Exception as e:
+            print(f"Erro ao buscar ofertas gerais pag {page}: {e}")
+
+    print(f"🔥 Total final de produtos cadastrados na vitrine: {len(todos_produtos)}")
     return todos_produtos
 
 def generate_html(produtos):
-    categorias_ordenadas = ["Eletrônicos & Tech", "Casa & Cozinha", "Moda & Calçados", "Beleza & Saúde", "Infantil & Brinquedos", "Pet Shop", "Ferramentas & Auto", "Esporte & Lazer", "Outras Ofertas"]
+    categorias_ordenadas = [
+        "Eletrônicos & Tech", "Casa & Cozinha", "Moda & Calçados", 
+        "Beleza & Saúde", "Infantil & Brinquedos", "Pet Shop", 
+        "Ferramentas & Auto", "Esporte & Lazer", "Outras Ofertas"
+    ]
     categorias_presentes = [c for c in categorias_ordenadas if any(p["categoria"] == c for p in produtos)]
     
     tabs_html = '<button class="tab-btn active" onclick="setCategory(\'all\', this)">🔥 Todos</button>'
@@ -355,9 +416,8 @@ def generate_html(produtos):
 
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html_content)
-    print("Sucesso: index.html completo gerado!")
+    print("Sucesso: index.html gerado!")
 
 if __name__ == "__main__":
-    # Busca 15 páginas x 40 produtos = até 600 produtos reais!
-    prods = fetch_shopee_products(max_pages=15, limit_per_page=40)
+    prods = fetch_shopee_products()
     generate_html(prods)
