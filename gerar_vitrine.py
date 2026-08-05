@@ -180,6 +180,147 @@ def fetch_shopee_products():
 
     return todos_produtos
 
+def generate_baixar_html():
+    baixar_content = """<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ee4d2d">
+    <link rel="manifest" href="manifest.json">
+    <title>Baixar Aplicativo - Radar de Ofertas</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f4f4f6; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; text-align: center; }
+        
+        .container {
+            background: #ffffff;
+            padding: 30px 20px;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: 1px solid #eaeaea;
+        }
+
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            object-fit: cover;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(238, 77, 45, 0.3);
+        }
+
+        h1 {
+            font-size: 1.3rem;
+            color: #111;
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        p {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .install-btn {
+            background: #ee4d2d;
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(238, 77, 45, 0.3);
+            transition: background 0.2s;
+            margin-bottom: 12px;
+        }
+
+        .install-btn:hover {
+            background: #d73d1b;
+        }
+
+        .back-link {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #ee4d2d;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .instructions {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: #888;
+            background: #fafafa;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="icon-192.png" alt="Ícone do App" class="app-icon">
+        <h1>Radar de Ofertas</h1>
+        <p>Instale o aplicativo oficial no seu celular para acessar as melhores promoções da Shopee com um toque, direto na tela inicial.</p>
+        
+        <button class="install-btn" id="installBtn" onclick="installApp()">Instalar Aplicativo</button>
+        
+        <div class="instructions" id="iosInstructions">
+            📱 <b>No iPhone/iPad:</b> Toque no botão de <b>Compartilhar</b> no Safari e selecione <b>"Adicionar à Tela de Início"</b>.
+        </div>
+
+        <a href="index.html" class="back-link">← Voltar para o site</a>
+    </div>
+
+    <script>
+        let deferredPrompt = null;
+        const installBtn = document.getElementById('installBtn');
+        const iosInstructions = document.getElementById('iosInstructions');
+
+        const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+        if (isIOS) {
+            installBtn.style.display = 'none';
+            iosInstructions.style.display = 'block';
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Usuário aceitou a instalação');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                alert('O aplicativo já está instalado ou seu navegador não suporta instalação direta por botão. Use o menu do navegador (três pontinhos) e selecione "Adicionar à tela inicial" ou "Instalar aplicativo".');
+            }
+        }
+    </script>
+</body>
+</html>
+"""
+    with open("baixar.html", "w", encoding="utf-8") as f:
+        f.write(baixar_content)
+    print("Sucesso: baixar.html gerado com sucesso!")
+
 def generate_html(produtos):
     categorias_ordenadas = [
         "Eletrônicos & Tech", "Casa & Cozinha", "Moda & Calçados", 
@@ -268,7 +409,6 @@ def generate_html(produtos):
             opacity: 0.8;
         }}
 
-        /* Cabeçalho unificado com fundo laranja e barra de pesquisa interna */
         .hero-header {{
             background: linear-gradient(135deg, #ee4d2d, #ff7337);
             color: #ffffff;
@@ -311,6 +451,23 @@ def generate_html(produtos):
         }}
         .search-input:focus {{
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }}
+
+        .download-link-container {{
+            text-align: center;
+            margin-bottom: 12px;
+        }}
+        .download-app-btn {{
+            background: #ffffff;
+            color: #ee4d2d;
+            border: 1px solid #ee4d2d;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }}
         
         .counter-bar {{
@@ -370,7 +527,6 @@ def generate_html(produtos):
         </div>
     </div>
 
-    <!-- Cabeçalho contendo o título, texto e a barra de pesquisa juntos -->
     <header class="hero-header">
         <h1>Radar de Ofertas</h1>
         <p>🎯 Nosso radar rastreia a Shopee em tempo real para trazer os achadinhos mais imperdíveis direto para você.</p>
@@ -378,6 +534,10 @@ def generate_html(produtos):
             <input type="text" id="searchInput" class="search-input" placeholder="🔍 Pesquisar em centenas de produtos..." oninput="onSearchChange()">
         </div>
     </header>
+
+    <div class="download-link-container">
+        <a href="baixar.html" class="download-app-btn">📲 Baixar o Aplicativo Oficial</a>
+    </div>
 
     <div class="counter-bar" id="counterBar">
         Carregando produtos...
@@ -520,4 +680,6 @@ def generate_html(produtos):
 if __name__ == "__main__":
     prods = fetch_shopee_products()
     prods.sort(key=lambda x: x["price_val"])
+    generate_baixar_html()
     generate_html(prods)
+
