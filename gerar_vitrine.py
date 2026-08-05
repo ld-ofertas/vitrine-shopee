@@ -230,20 +230,22 @@ def generate_html(produtos):
             display: none;
             align-items: center;
             justify-content: space-between;
+            gap: 12px;
             box-shadow: 0 2px 8px rgba(238, 77, 45, 0.25);
         }}
-        .app-banner-info {{ display: flex; align-items: center; gap: 10px; }}
+        .app-banner-info {{ display: flex; align-items: center; gap: 10px; flex-grow: 1; min-width: 0; }}
         .app-banner-icon-img {{
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
             object-fit: cover;
             background: #fff;
             flex-shrink: 0;
         }}
+        .app-banner-text {{ flex-grow: 1; min-width: 0; }}
         .app-banner-text h4 {{ font-size: 0.85rem; font-weight: 700; margin-bottom: 2px; }}
         .app-banner-text p {{ font-size: 0.72rem; opacity: 0.95; }}
-        .app-banner-actions {{ display: flex; align-items: center; gap: 8px; }}
+        .app-banner-actions {{ display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: 6px; }}
         .app-install-btn {{
             background: #ffffff;
             color: #ee4d2d;
@@ -254,6 +256,7 @@ def generate_html(produtos):
             font-weight: 700;
             cursor: pointer;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            white-space: nowrap;
         }}
         .app-close-btn {{
             background: none;
@@ -274,33 +277,11 @@ def generate_html(produtos):
             box-shadow: 0 2px 10px rgba(0,0,0,0.04);
             border: 1px solid #eaeaea;
         }}
-        .brand-logo {{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }}
-        .logo-icon {{
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, #ee4d2d, #ff7337);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(238, 77, 45, 0.3);
-        }}
-        .logo-icon svg {{
-            width: 24px;
-            height: 24px;
-            fill: #ffffff;
-        }}
         .hero-header h1 {{
             font-size: 1.5rem;
             color: #111;
             font-weight: 800;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             letter-spacing: -0.5px;
         }}
         .hero-header p {{
@@ -382,13 +363,6 @@ def generate_html(produtos):
     </div>
 
     <header class="hero-header">
-        <div class="brand-logo">
-            <div class="logo-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12H16A4,4 0 0,0 12,8V6M12,10A2,2 0 0,1 14,12H13V13H11V12A2,2 0 0,1 12,10Z"/>
-                </svg>
-            </div>
-        </div>
         <h1>Radar de Ofertas</h1>
         <p>🎯 Nosso radar rastreia a Shopee em tempo real para trazer os achadinhos mais imperdíveis direto para você.</p>
     </header>
