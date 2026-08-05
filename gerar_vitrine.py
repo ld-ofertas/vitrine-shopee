@@ -268,42 +268,50 @@ def generate_html(produtos):
             opacity: 0.8;
         }}
 
+        /* Cabeçalho unificado com fundo laranja e barra de pesquisa interna */
         .hero-header {{
-            background: #ffffff;
+            background: linear-gradient(135deg, #ee4d2d, #ff7337);
+            color: #ffffff;
             text-align: center;
-            padding: 22px 16px;
+            padding: 20px 16px;
             border-radius: 12px;
             margin-bottom: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-            border: 1px solid #eaeaea;
+            box-shadow: 0 2px 8px rgba(238, 77, 45, 0.25);
         }}
         .hero-header h1 {{
-            font-size: 1.5rem;
-            color: #111;
+            font-size: 1.4rem;
             font-weight: 800;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             letter-spacing: -0.5px;
         }}
         .hero-header p {{
-            font-size: 0.8rem;
-            color: #666;
+            font-size: 0.78rem;
+            opacity: 0.95;
             max-width: 520px;
-            margin: 0 auto;
+            margin: 0 auto 12px auto;
             line-height: 1.4;
         }}
+        .hero-header .search-box {{
+            margin-top: 10px;
+        }}
 
-        .search-box {{ margin-bottom: 8px; }}
         .search-input {{
             width: 100%;
-            padding: 10px 16px;
+            padding: 11px 16px;
             font-size: 0.9rem;
-            border: 1px solid #ddd;
-            border-radius: 20px;
+            border: none;
+            border-radius: 24px;
             outline: none;
-            background: #fff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            background: #ffffff;
+            color: #333333;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }}
-        .search-input:focus {{ border-color: #ee4d2d; }}
+        .search-input::placeholder {{
+            color: #888888;
+        }}
+        .search-input:focus {{
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }}
         
         .counter-bar {{
             font-size: 0.75rem;
@@ -362,14 +370,14 @@ def generate_html(produtos):
         </div>
     </div>
 
+    <!-- Cabeçalho contendo o título, texto e a barra de pesquisa juntos -->
     <header class="hero-header">
         <h1>Radar de Ofertas</h1>
         <p>🎯 Nosso radar rastreia a Shopee em tempo real para trazer os achadinhos mais imperdíveis direto para você.</p>
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Pesquisar em centenas de produtos..." oninput="onSearchChange()">
+        </div>
     </header>
-
-    <div class="search-box">
-        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Pesquisar em centenas de produtos..." oninput="onSearchChange()">
-    </div>
 
     <div class="counter-bar" id="counterBar">
         Carregando produtos...
@@ -513,4 +521,3 @@ if __name__ == "__main__":
     prods = fetch_shopee_products()
     prods.sort(key=lambda x: x["price_val"])
     generate_html(prods)
-
